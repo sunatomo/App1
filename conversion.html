@@ -1,0 +1,55 @@
+<html>
+	<head>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+         <style type="text/css">
+            
+            #footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                height: 60px;
+            }
+            
+            #detail {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                height: 400px;
+                visibility: hidden;
+            }
+            
+            .square_search{
+                display: inline-block;
+                padding: 7px 20px;
+                border-radius: 25px;
+                text-decoration: none;
+                color: #FFF;
+                background-image: -webkit-linear-gradient(45deg, #FFC107 0%, #ff8b5f 100%);
+                background-image: linear-gradient(45deg, #FFC107 0%, #ff8b5f 100%);
+                transition: .4s;
+            }
+
+        </style>
+		<script>
+        
+            function searchjump() {
+                 document.location.href='search.html';
+                 return false;
+            }
+		</script>
+	</head>
+    <body>
+        Enjoy!
+        <div id="footer" style="background-color: blanchedalmond;">
+        <Center>
+            <a href="#"  onclick="searchjump();return false;" class="square_search">検索条件に戻る</a>
+        </Center></div>
+        
+	</body>
+	<head>
+		<script src='login.js'></script>
+		<script src='http://hammerjs.github.io/dist/hammer.min.js'></script>
+		<script>
+		</script>
+	</head>
+</html>
