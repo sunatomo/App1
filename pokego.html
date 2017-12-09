@@ -1,10 +1,68 @@
 <html>
+	<head>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+         <style type="text/css">
+            
+            #footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                height: 60px;
+            }
+            
+            #detail {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                height: 400px;
+                visibility: hidden;
+            }
+            
+            .square_search{
+                display: inline-block;
+                padding: 7px 20px;
+                border-radius: 25px;
+                text-decoration: none;
+                color: #FFF;
+                background-image: -webkit-linear-gradient(45deg, #FFC107 0%, #ff8b5f 100%);
+                background-image: linear-gradient(45deg, #FFC107 0%, #ff8b5f 100%);
+                transition: .4s;
+            }
+
+        </style>
+		<script>
+        
+            function searchjump() {
+                 document.location.href='search.html';
+                 return false;
+            }
+            function conversion() {
+                 document.location.href='conversion.html';
+                 return false;
+            }
+		</script>
+	</head>
     <body>
-        <input id='hu'>
 		<canvas id='c1' width='100' height='100'>
 		</canvas>
-		<br>
-	    <button>検索</button>
+		
+        <div id="footer" style="background-color: blanchedalmond;">
+        <Center>
+            <a href="#"  onclick="searchjump();return false;" class="square_search">検索条件に戻る</a>
+        </Center></div>
+        
+        
+        <div id="detail" style="background-color: blanchedalmond;">
+            <img src='yoshinoya.jpg' with='200px' />
+            
+            <div>
+            いろいろあるよ！　めっちゃサービスするよ！
+            </div>
+            <Center>
+                <a href="#"  onclick="conversion();return false;" class="square_search">この店に行く！</a>
+            </Center>
+        </div>
+        
 	</body>
 	<head>
 		<script src='login.js'></script>
@@ -21,7 +79,8 @@
                     price: 5,
                     location: {x:200, y:200}
                 }
-            ]
+            ];
+            var sorted = [];
 		    var img = new Image();
 			img.src = "map.png";
 			var canvas = document.getElementById('c1');
@@ -32,6 +91,21 @@
             
             var rotateX = 0;
             var rotateY = 0.1;
+            hammerObj.on("tap",function (e) {
+                var detail = document.getElementById('detail');
+                detail.style.visibility = 'hidden';
+                //console.info(e);
+                var sel = null;
+                for(var s of sorted) {
+                    var l = Math.abs(s.tranlated[0] - e.center.x) + Math.abs(s.tranlated[1] - e.center.y);
+                    if(l<30) sel= s;
+                }
+                if(sel) {
+                    console.info(sel);
+                    detail.style.visibility = 'visible';
+                }
+            });
+            
             hammerObj.on("pan",function (e) {
                 //console.info(e);
                 rotateX += e.velocityX/10;
@@ -42,12 +116,11 @@
             }); 
             var start_scale = 10000.0;
             hammerObj.on("pinch",function (e) {
-                console.info(e);
+                //console.info(e);
                 if(e.isFirst) {
                     start_scale = scale;
                 }
                 scale = start_scale * e.scale;
-                document.getElementById('hu').value = e.scale;
                 if(e.isFinal) {
                     start_scale = scale;
                 }
@@ -115,13 +188,19 @@
                     s.tranlated = getPoint2D(m3, s.location.x,5 , s.location.y);
                 }
                 ctx.font = "italic bold 40px 'HG正楷書体-PRO'";
-                for(var s of shops.sort(function (a,b) {return b.tranlated[2]-a.tranlated[2];}) ) {
+                sorted = shops.sort(function (a,b) {return b.tranlated[2]-a.tranlated[2];});
+                for(var s of sorted ) {
+                    var w = Math.max(s.name.length, (""+s.price).length) *40;
                     ctx.fillStyle = 'rgb(80, 192, 77)';
-                    ctx.fillRect(s.tranlated[0], s.tranlated[1]-50, Math.max(s.name.length, (""+s.price).length) *40, 110);
+                    ctx.fillRect(s.tranlated[0] - w/2, s.tranlated[1]-50,w , 110);
                     
                     ctx.fillStyle = 'rgb(0, 0, 0)';
-                    ctx.fillText(s.name, s.tranlated[0], s.tranlated[1]);
-                    ctx.fillText(''+s.price, s.tranlated[0], s.tranlated[1]+50);
+                    ctx.fillText(s.name, s.tranlated[0] - w/2, s.tranlated[1]);
+                    ctx.fillText(''+s.price, s.tranlated[0] - w/2, s.tranlated[1]+50);
+                    ctx . beginPath();
+                    ctx.fillStyle = 'rgba(128, 128, 128, 0.5)';
+                    ctx.arc(s.tranlated[0], s.tranlated[1], 30, 0, Math.PI*2, false);
+                    ctx.fill();
                 }
 			}
             window.onwheel = function(e) {
