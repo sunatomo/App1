@@ -28,7 +28,7 @@
                 if(rotateY<0.1) rotateY=0.1;
 				draw(rotateX,rotateY);
             }); 
-            var start_scale = 1.0;
+            var start_scale = 10000.0;
             hammerObj.on("pinch",function (e) {
                 console.info(e);
                 scale = start_scale * e.scale;
