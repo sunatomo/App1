@@ -38,21 +38,89 @@
                 position: fixed;
                 bottom: 0;
                 width: 100%;
-                height: 100px;
+                height: 60px;
             }
+            
+            .square_search{
+                display: inline-block;
+                padding: 7px 20px;
+                border-radius: 25px;
+                text-decoration: none;
+                color: #FFF;
+                background-image: -webkit-linear-gradient(45deg, #FFC107 0%, #ff8b5f 100%);
+                background-image: linear-gradient(45deg, #FFC107 0%, #ff8b5f 100%);
+                transition: .4s;
+            }
+            
+            .ninzu2{
+                display: inline-block;
+                padding: 10px 10px;
+                text-decoration: none;
+                color: #FFF;
+                background-image: -webkit-linear-gradient(45deg, #FFC107 0%, #ff8b5f 100%);
+                background-image: linear-gradient(45deg, #FFC107 0%, #ff8b5f 100%);
+                transition: .4s;
+                margin: 4;
+            }
+            
+            .ninzu{
+                display: inline-block;
+                padding: 10px 10px;
+                text-decoration: none;
+                color: #FFF;
+                background-image: -webkit-linear-gradient(45deg, #FFE197 0%, #ffeb9f 100%);
+                background-image: linear-gradient(45deg, #FFE197 0%, #ffeb9f 100%);
+                transition: .4s;
+                margin: 4;
+            }
+            
+            .sample2-ul::-webkit-scrollbar {
+                  display: none;
+                }
+
         </style>
+		<script>
+        
+            function searchjump() {
+                 document.location.href='pokego.html';
+                 return false;
+            }
+		</script>
 	</head>
     <body>
-	    人数<input type='number' value='4' pattern='..*'/>
+        <div id='counts' class="sample2-ul" style="/* display: inline-block; */white-space: nowrap;overflow: scroll;">
+        </div>
 		<div id='cond'>
         </div>
-        <div id="footer">
-	        <button onclick='search()'>検索</button>
-        </div>
+        <div id="footer" style="background-color: blanchedalmond;">
+        <Center>
+            <a href="#"  onclick="searchjump();return false;" class="square_search">この条件で探す！</a>
+        </Center></div>
 	</body>
 	<head>
 		<script src='login.js'></script>
 		<script>
+        
+            
+            var counts = document.getElementById("counts");
+            
+            function ninzuSelect(e) {
+                var s = document.getElementsByClassName('ninzu2');
+                if(s.length) {
+                    s[0].classList = [ 'ninzu' ];
+                }
+                e.target.classList = ['ninzu2'];
+            }
+            
+            for(var i=0;i<100;++i) {
+                var a = document.createElement('a');
+                a.href='#';
+                a.classList = ["ninzu"];
+                a.innerText = i +1 + '人';
+                counts.appendChild(a);
+                a.onclick = ninzuSelect;
+            }
+            
             var conditions = [
                 '個室',
                 '一品サービス',
@@ -60,28 +128,27 @@
             ];
             var cond = document.getElementById("cond");
             function toggle(e) {
-                console.info(e.target);
+                //console.info(e.target);
                 var c = e.target.classList[0];
                 if(c== 'square_btn') {
-                    e.target.classList = ["square_need"]
-                }
+                    c ="square_need";
+                } else
                 if(c== 'square_need') {
-                    e.target.classList = ["square_hope"]
-                }
+                    c ="square_hope";
+                } else
                 if(c== 'square_hope') {
-                    e.target.classList = ["square_btn"]
+                    c ="square_btn";
                 }
+                e.target.classList = [c];
+                localStorage[e.target.innerText] = c;
             }
             for(var c of conditions) {
                 var a = document.createElement('a');
                 a.href='#';
-                a.classList = ["square_btn"]
+                a.classList = localStorage[c] ? [localStorage[c]] : ["square_btn"];
                 a.innerText = c;
                 cond.appendChild(a);
                 a.onclick = toggle;
-            }
-            function search() {
-                 document.location.href='pokego.html';
             }
 		</script>
 	</head>
