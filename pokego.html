@@ -10,6 +10,18 @@
 		<script src='login.js'></script>
 		<script src='http://hammerjs.github.io/dist/hammer.min.js'></script>
 		<script>
+            var shops = [
+                {
+                    name: 'test1',
+                    price: 50000000,
+                    location: {x:0, y:0}
+                },
+                {
+                    name: 'test2',
+                    price: 5,
+                    location: {x:200, y:200}
+                }
+            ]
 		    var img = new Image();
 			img.src = "map.png";
 			var canvas = document.getElementById('c1');
@@ -21,7 +33,7 @@
             var rotateX = 0;
             var rotateY = 0.1;
             hammerObj.on("pan",function (e) {
-                console.info(e);
+                //console.info(e);
                 rotateX += e.velocityX/10;
                 rotateY += e.velocityY/10;
                 if(rotateY>1.5) rotateY=1.5;
@@ -31,6 +43,9 @@
             var start_scale = 10000.0;
             hammerObj.on("pinch",function (e) {
                 console.info(e);
+                if(e.isFirst) {
+                    start_scale = scale;
+                }
                 scale = start_scale * e.scale;
                 document.getElementById('hu').value = e.scale;
                 if(e.isFinal) {
@@ -64,17 +79,17 @@
 			    var X = m[0][0]*x + m[0][1]*y + m[0][2]*z;
 			    var Y = m[1][0]*x + m[1][1]*y + m[1][2]*z;
 			    var Z = m[2][0]*x + m[2][1]*y + m[2][2]*z + img.height+img.width + 1;
-				return [X*scale/Z+window.innerWidth/2, Y*scale/Z+window.innerHeight/2];
+				return [X*scale/Z+window.innerWidth/2, Y*scale/Z+window.innerHeight/2, Z];
 			}
 			function draw(x,y) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 				ctx.save();
 				ctx.beginPath();
 				var m3 = getRotateMatrix3D(x,y);
-				var p1 = getPoint2D(m3,-img.width/2,50,img.height/2);
-				var p2 = getPoint2D(m3,img.width/2,50,img.height/2);
-				var p3 = getPoint2D(m3,-img.width/2,50,-img.height/2);
-				var p4 = getPoint2D(m3,img.width/2,50,-img.height/2);
+				var p1 = getPoint2D(m3,-img.width/2,10,img.height/2);
+				var p2 = getPoint2D(m3,img.width/2,10,img.height/2);
+				var p3 = getPoint2D(m3,-img.width/2,10,-img.height/2);
+				var p4 = getPoint2D(m3,img.width/2,10,-img.height/2);
                 
 				ctx.moveTo(p1[0],p1[1]);
 				ctx.lineTo(p2[0],p2[1]);
@@ -94,8 +109,20 @@
 				ctx.clip();
 				ctx.setTransform((p4[0]-p3[0])/img.width,(p4[1]-p3[1])/img.width,-(p2[0]-p4[0])/img.height,-(p2[1]-p4[1])/img.height,p3[0],p3[1]);
 				ctx.drawImage(img, 0, -img.height);
-                
 				ctx.restore();
+                
+                for(var s of shops) {
+                    s.tranlated = getPoint2D(m3, s.location.x,5 , s.location.y);
+                }
+                ctx.font = "italic bold 40px 'HG正楷書体-PRO'";
+                for(var s of shops.sort(function (a,b) {return b.tranlated[2]-a.tranlated[2];}) ) {
+                    ctx.fillStyle = 'rgb(80, 192, 77)';
+                    ctx.fillRect(s.tranlated[0], s.tranlated[1]-50, Math.max(s.name.length, (""+s.price).length) *40, 110);
+                    
+                    ctx.fillStyle = 'rgb(0, 0, 0)';
+                    ctx.fillText(s.name, s.tranlated[0], s.tranlated[1]);
+                    ctx.fillText(''+s.price, s.tranlated[0], s.tranlated[1]+50);
+                }
 			}
             window.onwheel = function(e) {
                 scale +=e.wheelDelta;
