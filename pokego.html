@@ -18,10 +18,13 @@
             hammerObj.get("tap").set({ enable: true });
             
             var rotateX = 0;
-            var rotateY = 0;
+            var rotateY = 0.1;
             hammerObj.on("pan",function (e) {
-                rotateX += e.overallVelocityX/10;
-                rotateY += e.overallVelocityY/10;
+                console.info(e);
+                rotateX += e.velocityX/10;
+                rotateY += e.velocityY/10;
+                if(rotateY>1.5) rotateY=1.5;
+                if(rotateY<0.1) rotateY=0.1;
 				draw(rotateX,rotateY);
             }); 
             
@@ -29,7 +32,7 @@
 			window.onresize = function() {
 				canvas.width = window.innerWidth;
 				canvas.height = window.innerHeight;
-				draw(0,0);
+				draw(rotateX,rotateY);
 			}
 			img.onload = function () {
 				window.onresize();
