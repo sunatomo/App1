@@ -191,6 +191,8 @@
                 sorted = shops.sort(function (a,b) {return b.tranlated[2]-a.tranlated[2];});
                 for(var s of sorted ) {
                     var w = Math.max(s.name.length, (""+s.price).length) *40;
+                    ctx.fillStyle = 'rgb(70, 162, 67)';
+                    ctx.fillRect(s.tranlated[0] - w/2 -10, s.tranlated[1]-60,w+20 , 130);
                     ctx.fillStyle = 'rgb(80, 192, 77)';
                     ctx.fillRect(s.tranlated[0] - w/2, s.tranlated[1]-50,w , 110);
                     

@@ -34,6 +34,17 @@
                 transition: .4s;
             }
             
+            .square_add{
+                display: inline-block;
+                padding: 0.5em 1em;
+                text-decoration: none;
+                color: #ffffff;
+                border: dashed 1px #67ffc5;
+                background: #02cf0c;
+                border-radius: 3px;
+                transition: .4s;
+            }
+            
             #footer {
                 position: fixed;
                 bottom: 0;
@@ -77,13 +88,22 @@
             .sample2-ul::-webkit-scrollbar {
                   display: none;
                 }
-
+            
+            input[type="text"]:focus,
+            texture:focus {
+                box-shadow: 0 0 7px #3498db;
+                border: 1px solid #3498db;
+            }
         </style>
 		<script>
         
             function searchjump() {
                  document.location.href='pokego.html';
                  return false;
+            }
+            function addCond() {
+                
+                return false;
             }
 		</script>
 	</head>
@@ -92,7 +112,10 @@
         </div>
 		<div id='cond'>
         </div>
-        <div id="footer" style="background-color: blanchedalmond;">
+        <!--
+        <input  pattern='..*' / ><a href='#' class='square_add' >条件を追加する</a>
+        <!-- -->
+        <div id="footer" onclick="addCond();return false;" style="background-color: blanchedalmond;">
         <Center>
             <a href="#"  onclick="searchjump();return false;" class="square_search">この条件で探す！</a>
         </Center></div>
