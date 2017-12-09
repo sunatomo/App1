@@ -1,0 +1,68 @@
+<html>
+    <body>
+		<canvas id='c1' width='100' height='100'>
+		</canvas>
+		<br>
+	    <button>検索</button>
+	</body>
+	<head>
+		<script src='login.js'></script>
+		<script>
+		    var img = new Image();
+			img.src = "map.png";
+			var canvas = document.getElementById('c1');
+			var ctx = canvas.getContext('2d');
+			window.onresize = function() {
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+				draw(0,0);
+			}
+			img.onload = function () {
+				window.onresize();
+			}
+			function getRotateMatrix3D(x,y) {
+			    var sinX = Math.sin(x);
+			    var cosX = Math.cos(x);
+			    var sinY = Math.sin(y);
+			    var cosY = Math.cos(y);
+			    return [
+				    [cosX, -sinY , 0],
+				    [cosY*sinX , cosY*cosX, -sinY],
+				    [sinY*sinX, sinY*cosX, cosY]
+				];
+			}
+			function getPoint2D(m, x,y,z) {
+			    var X = m[0][0]*x + m[0][1]*y + m[0][2]*z;
+			    var Y = m[1][0]*x + m[1][1]*y + m[1][2]*z;
+			    var Z = m[2][0]*x + m[2][1]*y + m[2][2]*z;
+				return [X/Z+img.width/2, Y/Z+img.height/2];
+			}
+			function draw(x,y) {
+				ctx.save();
+				ctx.beginPath();
+				var m3 = getRotateMatrix3D(x,y);
+				var p1 = getPoint2D(m3,-img.width/2,-img.height/2,0);
+				var p2 = getPoint2D(m3,img.width/2,0,0);
+				var p3 = getPoint2D(m3,0,img.height/2,0);
+				console.info(p1);
+				ctx.moveTo(p1[0],p1[1]);
+				ctx.lineTo(p2[0],p2[1]);
+				ctx.lineTo(p3[0],p3[1]);
+				ctx.closePath();
+				ctx.clip();
+				//ctx.transform(1,0,0,1,img.width/2,img.height/2);
+				//ctx.transform(1,0,-y/100.0,1,0,0);
+				//ctx.rotate(x/1000.0);
+				//ctx.transform(1,0,0,1,-img.width/2,-img.height/2);
+				ctx.drawImage(img, 0, 0);
+				ctx.restore();
+				
+ctx.strokeStyle = "red"; //線の色を赤にする（最終的に不要）
+ctx.stroke(); //三角形の「線」を描く（最終的に不要）（※2）
+			}
+			window.onmousemove =  function (e) {
+				draw(e.clientX,e.clientY);
+			}
+		</script>
+	</head>
+</html>

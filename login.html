@@ -8,9 +8,13 @@
 		}).then(function(json) {
 		  alert(json.message);
 		});
+		function inp(e) {
+			localStorage['user'] = e.value;
+			document.location.href='search.html';
+		}
 		</script>
 	</head>
     <body>
-	    ユーザ名<input type='text' id ='username'/>
+	    ユーザ名<input type='text' pattern='..*' onChange='inp(this)'/>
 	</body>
 </html>

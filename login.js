@@ -3,4 +3,8 @@ if(localStorage['user']==undefined) {
 	if(!isLoginPage) {
 		document.location.href='login.html';
 	} 
+} else {
+	if(isLoginPage) {
+		document.location.href='search.html';
+	}
 }
