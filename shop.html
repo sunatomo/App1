@@ -1,0 +1,271 @@
+<html>
+	<head>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        
+         <style type="text/css">
+            #hidari {
+                    width: 40%;
+                    height:100%;
+                     float: left;
+              background: #cccccc;
+            }
+
+            #price {
+                    width: 60%;
+                    height:100%;
+                      float: right;
+              background: #dcffdc;
+            }
+            
+            .onereq {
+              background: #eeeeee;
+              margin: 3;
+            }
+            
+            
+            
+            .square_hope{
+                display: inline-block;
+                padding: 0.5em 1em;
+                text-decoration: none;
+                color: #3735ff;
+                border: dashed 1px #67c5ff;
+                background: #d2dcff;
+                border-radius: 3px;
+                transition: .4s;
+            }
+            
+            .square_need{
+                display: inline-block;
+                padding: 0.5em 1em;
+                text-decoration: none;
+                color: #ff3735;
+                border: dashed 1px #ff67c5;
+                background: #ffd2dc;
+                border-radius: 3px;
+                transition: .4s;
+            }
+            .subject {
+                text-align: left;  /* 文章を左寄せする(※) */
+                float: left;     /* 左端に寄せて、後続を右側へ回り込ませる */
+                    margin: 0;
+            }
+            .date {
+                
+                margin: 0;
+                text-align: right; /* 文章を右寄せする */
+            }
+            
+            .square_btn{
+                display: inline-block;
+                padding: 0.5em 1em;
+                text-decoration: none;
+                background: #66da88;/*ボタン色*/
+                color: #FFF;
+                border-bottom: solid 4px #629275;
+                border-radius: 3px;
+            }
+            
+            .square_delete{
+                display: inline-block;
+                padding: 0.5em 1em;
+                text-decoration: none;
+                background: #f62a38;/*ボタン色*/
+                color: #FFF;
+                border-bottom: solid 4px #f27295;
+                border-radius: 3px;
+            }
+            
+            input {
+                padding-top: 30;
+                    height: 60px;
+                        font-size: 40;
+            }
+            
+            
+            #tabcontrol {
+            margin: 0;
+            }
+            
+            #tabcontrol a {
+               display: inline-block;            /* インラインブロック化 */
+               border-width: 1px 1px 0px 1px;    /* 下以外の枠線を引く */
+               border-style: solid;              /* 枠線の種類：実線 */
+               border-color: black;              /* 枠線の色：黒色 */
+               border-radius: 0.75em 0.75em 0 0; /* 枠線の左上角と右上角だけを丸く */
+               padding: 0.75em 1em;              /* 内側の余白 */
+               text-decoration: none;            /* リンクの下線を消す */
+               color: black;                     /* 文字色：黒色 */
+               background-color: white;          /* 背景色：白色 */
+               position: relative;               /* JavaScriptでz-indexを調整するために必要 */
+            }
+            
+            .choice {
+                font-weight: bold;                /* 太字 */
+            }
+            .unchoice {
+                font-weight: thin;                /* 太字 */
+            }
+            
+        </style>
+        
+		<script src='login.js'></script>
+		<script>
+            var requests = [
+                {
+                    name:'tsunaga',
+                    conditions: ['2時間飲み放題'],
+                    time: 4,
+                    number: 1,
+                    status: 0
+                },
+                {
+                    name:'duffy',
+                    conditions: ['個室','ハイネケン'],
+                    time: 4,
+                    number: 2,
+                    status: 0
+                },
+                {
+                    name:'hatsumi',
+                    conditions: ['店員一発芸','ビールサービス','犬持ち込み可','会計１０％引き'],
+                    time: 4,
+                    number: 10,
+                    status: 0
+                },
+                {
+                    name:'sai',
+                    conditions: ['ミャンマー語OK','MMK チャット払いOK'],
+                    time: 4,
+                    number: 2,
+                    status: 0
+                }
+            ];
+		</script>
+	</head>
+    <body>
+        <div id='hidari'>
+            <p id="tabcontrol"　style="margin: 0">
+               <a href="#tabpage1" id='newreq' class='choice' onclick='drawNew()' >新着リクエスト</a>
+               <a href="#tabpage2" id='donereq' class='unchoice' onclick='drawDone()' >返信済みリクエスト</a>
+            </p>
+            <div id='requests'>
+            </div>
+        </div>
+        <div id='price'>
+            <font size='10'>
+                <div id='baseinfo' style='margin:10' ></div>
+            </font>
+            <div id='edit_conditions'  style='margin:10' ></div>
+            <div style='margin:10'>
+               <font size='10' > <input  pattern='..*'  id='nedan' type='number'/>円</font>
+            </div>
+            <font size=10>
+            <a href="#"  onclick="deleteReq2();return false;" class="square_delete">削除</a>
+            <a href="#"  onclick="replyRequest();return false;" class="square_btn">この値段で決定</a>
+            </font>
+        </div>
+	</body>
+	<head>
+		<script>
+          var requestsDiv = document.getElementById('requests');
+          var priceDiv = document.getElementById('price');
+          var selReq = null;
+          function edit(t) {
+              console.info(t);
+              for(var e of t.path) {
+                  if(e.classList.length && e.classList[0] == 'onereq') {
+                      
+                      var r = e.req;
+                      selReq = r;
+                      document.getElementById('baseinfo').innerText = r.number + '人 徒歩' + r.time + '分';
+                      
+                      document.getElementById('edit_conditions').innerHTML='';
+                      for(var c of r.conditions) {
+                        var a = document.createElement('a');
+                        a.href='#';
+                        a.classList = ["square_need"];
+                        a.innerText = c;
+                        document.getElementById('edit_conditions').appendChild(a);
+                      }
+                      //e.remove();
+                      break;
+                  }
+              }
+              //t.parentElement.remove(t);
+          }
+          
+          function deleteReq(t) {
+              t.parentElement.req.status=2;
+              t.parentElement.remove(t);
+          }
+          
+          function deleteReq2() {
+              if(selReq && selReq.div) selReq.status=2;
+              document.getElementById('baseinfo').innerText='';
+              document.getElementById('edit_conditions').innerHTML='';
+              document.getElementById('nedan').value='';
+              selReq = null;
+              drawNew();
+          }
+          function replyRequest() {
+              if(selReq && selReq.div) {
+                  selReq.status=1;
+                  selReq.price = document.getElementById('nedan').value*1;
+              }
+              document.getElementById('baseinfo').innerText='';
+              document.getElementById('edit_conditions').innerHTML='';
+              document.getElementById('nedan').value='';
+              selReq = null;
+              drawNew();
+          }
+          
+          
+          var requestsDiv = document.getElementById('requests');
+          function drawNew() {
+              requestsDiv.innerHTML = '';
+              document.getElementById('newreq').classList = ['choice'];
+              document.getElementById('donereq').classList = ['unchoice'];
+              for(var r of requests) if(r.status==0) {
+                  var div = document.createElement('div');
+                  div.classList= ['onereq'];
+                  div.innerHTML='<p class="subject">' + r.number + '人 徒歩' + r.time + '分' +'</p><p onclick="deleteReq(this)" class="date">×</p>';
+                  requestsDiv.appendChild(div);
+                  
+                  for(var c of r.conditions) {
+                    var a = document.createElement('a');
+                    a.href='#';
+                    a.classList = ["square_need"];
+                    a.innerText = c;
+                    div.appendChild(a);
+                  }
+                  div.req = r;
+                  r.div = div;
+                  div.onclick = edit;
+              }
+          }
+          function drawDone() {
+              requestsDiv.innerHTML = '';
+              document.getElementById('newreq').classList = ['unchoice'];
+              document.getElementById('donereq').classList = ['choice'];
+              for(var r of requests) if(r.status==1) {
+                  var div = document.createElement('div');
+                  div.classList= ['onereq'];
+                  div.innerHTML='<p class="subject">' + r.number + '人 徒歩' + r.time + '分' +'</p><p  class="date">'+r.price + '円</p>';
+                  requestsDiv.appendChild(div);
+                  
+                  for(var c of r.conditions) {
+                    var a = document.createElement('a');
+                    a.href='#';
+                    a.classList = ["square_need"];
+                    a.innerText = c;
+                    div.appendChild(a);
+                  }
+                  div.req = r;
+                  r.div = div;
+              }
+          }
+          drawNew();
+		</script>
+	</head>
+</html>
