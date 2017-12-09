@@ -1,0 +1,41 @@
+<html>
+    <body>
+    <div id="canvas"></div>
+	    <button>検索</button>
+	</body>
+	<head>
+		<script src='login.js'></script>
+		<script src='https://threejs.org/build/three.min.js'></script>
+		<script>window.addEventListener("load", function() {
+    function threeRender() {
+    var renderer = new THREE.WebGLRenderer({
+        "antialias" : true
+    });
+    renderer.setSize(400, 400);
+    document.getElementById("canvas").appendChild(renderer.domElement);
+ 
+    var camera = new THREE.PerspectiveCamera(40, 1.0, 1, 10000);
+    camera.position.set(50, 20, 60);
+    camera.lookAt({
+        x : 0,
+        y : 0,
+        z : 0
+    });
+ 
+    var cube = new THREE.Mesh(new THREE.CubeGeometry(30, 30, 30), new THREE.MeshLambertMaterial({
+        "color" : 0xffffff,
+        "wireframe" : true
+    }));
+ 
+    var scene = new THREE.Scene();
+    scene.add(cube); 
+    scene.add(camera);
+     
+     renderer.render(scene, camera);
+    }
+    threeRender();
+ 
+}, false);
+		</script>
+	</head>
+</html>
