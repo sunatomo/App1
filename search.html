@@ -11,12 +11,6 @@
                 border-radius: 3px;
                 transition: .4s;
             }
-
-            .square_btn:hover {
-                border-style: dotted;
-                color: #679efd;
-            }
-            
             
             .square_hope{
                 display: inline-block;
@@ -28,12 +22,6 @@
                 border-radius: 3px;
                 transition: .4s;
             }
-
-            .square_hope:hover {
-                background: #cbedff;
-                color: #FFF;
-            }
-            
             
             .square_need{
                 display: inline-block;
@@ -45,10 +33,12 @@
                 border-radius: 3px;
                 transition: .4s;
             }
-
-            .square_need:hover {
-                background: #cbedff;
-                color: #FFF;
+            
+            #footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                height: 100px;
             }
         </style>
 	</head>
@@ -56,8 +46,9 @@
 	    人数<input type='number' value='4' pattern='..*'/>
 		<div id='cond'>
         </div>
-        
-	    <button onclick='search()'>検索</button>
+        <div id="footer">
+	        <button onclick='search()'>検索</button>
+        </div>
 	</body>
 	<head>
 		<script src='login.js'></script>
@@ -90,7 +81,7 @@
                 a.onclick = toggle;
             }
             function search() {
-                 
+                 document.location.href='pokego.html';
             }
 		</script>
 	</head>
