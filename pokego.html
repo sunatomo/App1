@@ -1,5 +1,6 @@
 <html>
     <body>
+        <input id='hu'>
 		<canvas id='c1' width='100' height='100'>
 		</canvas>
 		<br>
@@ -27,10 +28,11 @@
                 if(rotateY<0.1) rotateY=0.1;
 				draw(rotateX,rotateY);
             }); 
-            var start_scale = 1;
+            var start_scale = 1.0;
             hammerObj.on("pinch",function (e) {
                 console.info(e);
                 scale = start_scale * e.scale;
+                document.getElementById('hu').value = e.scale;
                 if(e.isFinal) {
                     start_scale = scale;
                 }
