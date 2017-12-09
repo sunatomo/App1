@@ -20,49 +20,62 @@
 			img.onload = function () {
 				window.onresize();
 			}
-			function getRotateMatrix3D(x,y) {
+            var scale = 10000;
+			function getRotateMatrix3D(y,x) {
 			    var sinX = Math.sin(x);
 			    var cosX = Math.cos(x);
 			    var sinY = Math.sin(y);
 			    var cosY = Math.cos(y);
 			    return [
-				    [cosX, -sinY , 0],
-				    [cosY*sinX , cosY*cosX, -sinY],
-				    [sinY*sinX, sinY*cosX, cosY]
+				    [cosY, 0 , sinY],
+				    [sinY*sinX , cosX, -sinX*cosY],
+				    [-sinY*cosX, sinX, cosY*cosX]
 				];
 			}
 			function getPoint2D(m, x,y,z) {
 			    var X = m[0][0]*x + m[0][1]*y + m[0][2]*z;
 			    var Y = m[1][0]*x + m[1][1]*y + m[1][2]*z;
-			    var Z = m[2][0]*x + m[2][1]*y + m[2][2]*z;
-				return [X/Z+img.width/2, Y/Z+img.height/2];
+			    var Z = m[2][0]*x + m[2][1]*y + m[2][2]*z + img.height+img.width + 1;
+				return [X*scale/Z+window.innerWidth/2, Y*scale/Z+window.innerHeight/2];
 			}
 			function draw(x,y) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 				ctx.save();
 				ctx.beginPath();
 				var m3 = getRotateMatrix3D(x,y);
-				var p1 = getPoint2D(m3,-img.width/2,-img.height/2,0);
-				var p2 = getPoint2D(m3,img.width/2,0,0);
-				var p3 = getPoint2D(m3,0,img.height/2,0);
-				console.info(p1);
+				var p1 = getPoint2D(m3,-img.width/2,50,img.height/2);
+				var p2 = getPoint2D(m3,img.width/2,50,img.height/2);
+				var p3 = getPoint2D(m3,-img.width/2,50,-img.height/2);
+				var p4 = getPoint2D(m3,img.width/2,50,-img.height/2);
+                
 				ctx.moveTo(p1[0],p1[1]);
 				ctx.lineTo(p2[0],p2[1]);
 				ctx.lineTo(p3[0],p3[1]);
 				ctx.closePath();
 				ctx.clip();
-				//ctx.transform(1,0,0,1,img.width/2,img.height/2);
-				//ctx.transform(1,0,-y/100.0,1,0,0);
-				//ctx.rotate(x/1000.0);
-				//ctx.transform(1,0,0,1,-img.width/2,-img.height/2);
+				ctx.setTransform((p2[0]-p1[0])/img.width,(p2[1]-p1[1])/img.width,(p3[0]-p1[0])/img.height,(p3[1]-p1[1])/img.height,p1[0],p1[1]);
 				ctx.drawImage(img, 0, 0);
+                ctx.restore();
+                
+                ctx.save();
+				ctx.beginPath();
+				ctx.moveTo(p4[0],p4[1]);
+				ctx.lineTo(p2[0],p2[1]);
+				ctx.lineTo(p3[0],p3[1]);
+				ctx.closePath();
+				ctx.clip();
+				ctx.setTransform((p4[0]-p3[0])/img.width,(p4[1]-p3[1])/img.width,-(p2[0]-p4[0])/img.height,-(p2[1]-p4[1])/img.height,p3[0],p3[1]);
+				ctx.drawImage(img, 0, -img.height);
+                
 				ctx.restore();
-				
-ctx.strokeStyle = "red"; //線の色を赤にする（最終的に不要）
-ctx.stroke(); //三角形の「線」を描く（最終的に不要）（※2）
 			}
 			window.onmousemove =  function (e) {
-				draw(e.clientX,e.clientY);
+				draw(e.clientX/100.0,e.clientY/500.0);
 			}
+            window.onwheel = function(e) {
+                scale +=e.wheelDelta;
+                return false;
+            }
 		</script>
 	</head>
 </html>
