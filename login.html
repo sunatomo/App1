@@ -1,0 +1,16 @@
+<html>
+	<head>
+		<script src='login.js'></script>
+		<script>
+		fetch('http://ec2-52-198-92-57.ap-northeast-1.compute.amazonaws.com/api/hoge', 
+		{method: 'POST',mode: 'cors'}).then(function(response) {
+		  return response.json();
+		}).then(function(json) {
+		  alert(json.message);
+		});
+		</script>
+	</head>
+    <body>
+	    ユーザ名<input type='text' id ='username'/>
+	</body>
+</html>
