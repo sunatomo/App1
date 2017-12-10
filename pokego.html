@@ -2,7 +2,7 @@
 	<head>
         <meta name="viewport" content="width=device-width,initial-scale=1">
          <style type="text/css">
-            
+            body {background-image: url("akiba.jpeg"); }
             #footer {
                 position: fixed;
                 bottom: 0;
@@ -53,11 +53,14 @@
         
         
         <div id="detail" style="background-color: blanchedalmond;">
-            <img src='yoshinoya.jpg' with='200px' />
-            
-            <div>
-            いろいろあるよ！　めっちゃサービスするよ！
+            <img id='gazou' src='yoshinoya.jpg' width='200px' />
+            <font size='5' id='shopname' ></font>
+            <font size='7'  >
+                <div id='contents'>
+                </div>
+            <div id='price_area'>
             </div>
+            </font>
             <Center>
                 <a href="#"  onclick="conversion();return false;" class="square_search">この店に行く！</a>
             </Center>
@@ -69,6 +72,7 @@
 		<script src='http://hammerjs.github.io/dist/hammer.min.js'></script>
 		<script>
             var shops = [
+            /*
                 {
                     name: 'test1',
                     price: 50000000,
@@ -79,7 +83,25 @@
                     price: 5,
                     location: {x:200, y:200}
                 }
+                */
             ];
+            function updateShops() {
+                fetch('http://ec2-13-230-77-223.ap-northeast-1.compute.amazonaws.com/api/research', 
+                {
+                  method: 'POST',
+                  mode: 'cors',
+                  headers: {
+                    'X-dHack-User': 'dHack',
+                    'Content-Type': 'application/json'
+                  }
+                }).then(function(response) {
+                  return response.json();
+                }).then(function(json) {
+                  //console.log(json);
+                  shops = json.shops;
+                });
+            }
+            setInterval(updateShops, 2000);
             var sorted = [];
 		    var img = new Image();
 			img.src = "map.png";
@@ -101,7 +123,28 @@
                     if(l<30) sel= s;
                 }
                 if(sel) {
-                    console.info(sel);
+                    //console.info(sel);
+                    fetch('http://ec2-13-230-77-223.ap-northeast-1.compute.amazonaws.com/api/shop/detail', 
+                    {
+                      method: 'POST',
+                      body: JSON.stringify({
+                          shopId: sel.shopId
+                      }),
+                      mode: 'cors',
+                      headers: {
+                        'X-dHack-User': 'dHack',
+                        'Content-Type': 'application/json'
+                      }
+                    }).then(function(response) {
+                      return response.json();
+                    }).then(function(json) {
+                      console.log(json);
+                      document.getElementById('gazou').src = json.imageUrl;
+                      document.getElementById('shopname').innerText = json.name;
+                      document.getElementById('contents').innerText = json.message;
+                      document.getElementById('price_area').innerText = json.price+'円';
+                      
+                    });
                     detail.style.visibility = 'visible';
                 }
             });
@@ -190,14 +233,14 @@
                 ctx.font = "italic bold 40px 'HG正楷書体-PRO'";
                 sorted = shops.sort(function (a,b) {return b.tranlated[2]-a.tranlated[2];});
                 for(var s of sorted ) {
-                    var w = Math.max(s.name.length, (""+s.price).length) *40;
+                    var w = Math.max(s.message.length, (""+s.price).length) *40;
                     ctx.fillStyle = 'rgb(70, 162, 67)';
                     ctx.fillRect(s.tranlated[0] - w/2 -10, s.tranlated[1]-60,w+20 , 130);
                     ctx.fillStyle = 'rgb(80, 192, 77)';
                     ctx.fillRect(s.tranlated[0] - w/2, s.tranlated[1]-50,w , 110);
                     
                     ctx.fillStyle = 'rgb(0, 0, 0)';
-                    ctx.fillText(s.name, s.tranlated[0] - w/2, s.tranlated[1]);
+                    ctx.fillText(s.message, s.tranlated[0] - w/2, s.tranlated[1]);
                     ctx.fillText(''+s.price, s.tranlated[0] - w/2, s.tranlated[1]+50);
                     ctx . beginPath();
                     ctx.fillStyle = 'rgba(128, 128, 128, 0.5)';
@@ -209,6 +252,7 @@
                 scale +=e.wheelDelta;
                 return false;
             }
+            
 		</script>
 	</head>
 </html>

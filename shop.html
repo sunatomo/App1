@@ -157,10 +157,13 @@
                 <div id='baseinfo' style='margin:10' ></div>
             </font>
             <div id='edit_conditions'  style='margin:10' ></div>
+            <div>
+               <font size='10' > <input placeholder='一言コメント' pattern='..*'  id='free_message' /></font>
+            <div>
             <div style='margin:10'>
-               <font size='10' > <input  pattern='..*'  id='nedan' type='number'/>円</font>
+               <font size='10' > <input   pattern='..*'  id='nedan' type='number'/>円</font>
             </div>
-            <font size=10>
+            <font size=5>
             <a href="#"  onclick="deleteReq2();return false;" class="square_delete">削除</a>
             <a href="#"  onclick="replyRequest();return false;" class="square_btn">この値段で決定</a>
             </font>
@@ -212,10 +215,36 @@
               if(selReq && selReq.div) {
                   selReq.status=1;
                   selReq.price = document.getElementById('nedan').value*1;
+                  selReq.comment = document.getElementById('free_message').value;
+                  if(!selReq.comment) {
+                      selReq.comment = '^^';
+                  }
+                  fetch('http://ec2-13-230-77-223.ap-northeast-1.compute.amazonaws.com/api/shop/pr/msg', 
+                    {
+                      method: 'POST',
+                      body: JSON.stringify({
+                          shopId:1,
+                          userId: selReq.name,
+                          availableSeat:20,
+                          priceFrom:2000,
+                          priceTo:selReq.price,
+                          comment: selReq.comment
+                      }),
+                      mode: 'cors',
+                      headers: {
+                        'X-dHack-User': 'dHack',
+                        'Content-Type': 'application/json'
+                      }
+                    }).then(function(response) {
+                      return response.json();
+                    }).then(function(json) {
+                      //console.log(json);
+                    });
               }
               document.getElementById('baseinfo').innerText='';
               document.getElementById('edit_conditions').innerHTML='';
               document.getElementById('nedan').value='';
+              document.getElementById('free_message').value='';
               selReq = null;
               drawNew();
           }
@@ -251,7 +280,8 @@
               for(var r of requests) if(r.status==1) {
                   var div = document.createElement('div');
                   div.classList= ['onereq'];
-                  div.innerHTML='<p class="subject">' + r.number + '人 徒歩' + r.time + '分' +'</p><p  class="date">'+r.price + '円</p>';
+                  div.innerHTML='<p class="subject">' + r.number + '人 徒歩' + r.time + '分' +'</p><p  class="date">'+r.price + '円</p>' +
+                                '<p>' + r.comment + '</p>';
                   requestsDiv.appendChild(div);
                   
                   for(var c of r.conditions) {

@@ -98,7 +98,30 @@
 		<script>
         
             function searchjump() {
-                 document.location.href='pokego.html';
+                 condsd = [];
+                 for(var n of document.getElementsByClassName('square_need')) {
+                     condsd.push(n.innerText);
+                 }
+                 fetch('http://ec2-13-230-77-223.ap-northeast-1.compute.amazonaws.com/api/search', 
+                    {
+                      method: 'POST',
+                      body: JSON.stringify({
+                          user: localStorage.user, 
+                          members: document.getElementsByClassName('ninzu2')[0].num, 
+                          conditions: condsd, 
+                          location:{x:2, y:3}
+                      }),
+                      mode: 'cors',
+                      headers: {
+                        'X-dHack-User': 'dHack',
+                        'Content-Type': 'application/json'
+                      }
+                    }).then(function(response) {
+                      return response.json();
+                    }).then(function(json) {
+                      //console.log(json);
+                      document.location.href='pokego.html';
+                    });
                  return false;
             }
             function addCond() {
@@ -140,9 +163,11 @@
                 a.href='#';
                 a.classList = ["ninzu"];
                 a.innerText = i +1 + '人';
+                a.num = i + 1;
                 counts.appendChild(a);
                 a.onclick = ninzuSelect;
             }
+            ninzuSelect({target:document.getElementsByClassName('ninzu')[3]});
             
             var conditions = [
                 '個室',
