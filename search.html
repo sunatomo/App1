@@ -136,8 +136,10 @@
         </div>
 		<div id='cond'>
         </div>
+        <br>
+        <a href='#' class='square_add' >条件を追加する</a>
         <!--
-        <input  pattern='..*' / ><a href='#' class='square_add' >条件を追加する</a>
+        <input  pattern='..*' / >
         <!-- -->
         <div id="footer" onclick="addCond();return false;" style="background-color: blanchedalmond;">
         <Center>
@@ -174,6 +176,17 @@
                 '個室',
                 '一品サービス',
                 '2時間飲み放題',
+                'グラタン',
+                'イタリアン',
+                '喫煙席',
+                '会計から10%引き',
+                '会計から15%引き',
+                '俺の魂をゆさぶる',
+                'in English',
+                '会計から20%引き',
+                'BGM藤澤ノリマサ',
+                'さけとば！',
+                'フレンチ',
             ];
             var cond = document.getElementById("cond");
             function toggle(e) {
@@ -183,7 +196,7 @@
                     c ="square_need";
                 } else
                 if(c== 'square_need') {
-                    c ="square_hope";
+                    c ="square_btn";
                 } else
                 if(c== 'square_hope') {
                     c ="square_btn";

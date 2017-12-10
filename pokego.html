@@ -253,7 +253,9 @@
                     ctx.fillStyle = 'rgb(80, 192, 77)';
                     ctx.fillRect(s.tranlated[0] - w/2, s.tranlated[1]-40,w , 60);
                     
-                    ctx.fillStyle = 'rgb(0, 0, 0)';
+                    if(s.price == "1500") {
+                        ctx.fillStyle = 'rgb(255, 255, 0)';
+                    } else ctx.fillStyle = 'rgb(0, 0, 0)';
                     ctx.fillText(s.message, s.tranlated[0] - w/2, s.tranlated[1]);
                     ctx.fillText(''+s.price, s.tranlated[0] - w/2, s.tranlated[1]+25);
                     ctx . beginPath();

@@ -39,7 +39,7 @@
 		</script>
 	</head>
     <body>
-        <img style='position: absolute; position: 0px 0px; opacity: 0' src = 'ninjin.png' />
+        <img id='ninja' style='position: absolute; position: 0px 0px; opacity: 0' src = 'ninjin.png' />
         <div style='height:200px;'> </div>
         <img src = 'kakutei.png' />
         <div id="footer" style="background-color: blanchedalmond;">
@@ -52,6 +52,12 @@
 		<script src='login.js'></script>
 		<script src='http://hammerjs.github.io/dist/hammer.min.js'></script>
 		<script>
+            function opa() {
+			    var ninja = document.getElementById('ninja');
+                ninja.style.opacity=ninja.style.opacity*1+0.05;
+            }
+            ;
+            setTimeout('setInterval(opa,100);',2000);
 		</script>
 	</head>
 </html>
