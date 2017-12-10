@@ -89,6 +89,9 @@
                 fetch('http://ec2-13-230-77-223.ap-northeast-1.compute.amazonaws.com/api/research', 
                 {
                   method: 'POST',
+                  body: JSON.stringify({
+                      user:localStorage.user
+                  }),
                   mode: 'cors',
                   headers: {
                     'X-dHack-User': 'dHack',
@@ -99,6 +102,17 @@
                 }).then(function(json) {
                   //console.log(json);
                   shops = json.shops;
+                  
+                    for(var i=0;i<shops.length;  ++i) {
+                        var z = 5;
+                        for(var j=0; j<i;++j) {
+                            var l = Math.abs(shops[i].location.x - shops[j].location.x) + Math.abs(shops[i].location.y - shops[j].location.y);
+                            if(l<10) {
+                                z = shops[j].location.z + 2;
+                            }
+                        }
+                        shops[i].location.z = 5;
+                    }
                 });
             }
             setInterval(updateShops, 2000);
@@ -228,20 +242,20 @@
 				ctx.restore();
                 
                 for(var s of shops) {
-                    s.tranlated = getPoint2D(m3, s.location.x,5 , s.location.y);
+                    s.tranlated = getPoint2D(m3, s.location.x,s.location.z , s.location.y);
                 }
-                ctx.font = "italic bold 40px 'HG正楷書体-PRO'";
+                ctx.font = "italic bold 20px 'HG正楷書体-PRO'";
                 sorted = shops.sort(function (a,b) {return b.tranlated[2]-a.tranlated[2];});
                 for(var s of sorted ) {
-                    var w = Math.max(s.message.length, (""+s.price).length) *40;
+                    var w = Math.max(s.message.length, (""+s.price).length) *20;
                     ctx.fillStyle = 'rgb(70, 162, 67)';
-                    ctx.fillRect(s.tranlated[0] - w/2 -10, s.tranlated[1]-60,w+20 , 130);
+                    ctx.fillRect(s.tranlated[0] - w/2 -5, s.tranlated[1]-40,w+10 , 70);
                     ctx.fillStyle = 'rgb(80, 192, 77)';
-                    ctx.fillRect(s.tranlated[0] - w/2, s.tranlated[1]-50,w , 110);
+                    ctx.fillRect(s.tranlated[0] - w/2, s.tranlated[1]-40,w , 60);
                     
                     ctx.fillStyle = 'rgb(0, 0, 0)';
                     ctx.fillText(s.message, s.tranlated[0] - w/2, s.tranlated[1]);
-                    ctx.fillText(''+s.price, s.tranlated[0] - w/2, s.tranlated[1]+50);
+                    ctx.fillText(''+s.price, s.tranlated[0] - w/2, s.tranlated[1]+25);
                     ctx . beginPath();
                     ctx.fillStyle = 'rgba(128, 128, 128, 0.5)';
                     ctx.arc(s.tranlated[0], s.tranlated[1], 30, 0, Math.PI*2, false);
